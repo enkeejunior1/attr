@@ -11,5 +11,6 @@ CUDA_VISIBLE_DEVICES=$1 python3 gen_unconditional.py \
     --train_batch_size=256 \
     --model_path=./saved/$3/ddpm \
     --gen_seed=$2 \
-    --output_dir=./saved/$3/gen
+    --output_dir=./saved/$3/gen \
+    --device="cuda:$1"
 

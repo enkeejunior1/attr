@@ -4,7 +4,7 @@ echo "setting: $3"
 
 export HF_HOME="~/codes/.cache/huggingface"
 
-CUDA_VISIBLE_DEVICES=$1 python gen_unconditional.py \
+CUDA_VISIBLE_DEVICES=$1 python3 gen_unconditional.py \
     --dataset_name="cifar10" \
     --dataloader_num_workers=8 \
     --model_config_name_or_path="config.json" \

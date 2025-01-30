@@ -4,7 +4,7 @@ echo "setting: $3"
 
 export HF_HOME="~/codes/.cache/huggingface"
 
-accelerate launch --gpu_ids $1 --main_process_port=$2 train_unconditional.py \
+accelerate launch --gpu_ids $1 --main_process_port=$2 --config_file /home/yonghyun/.cache/huggingface/accelerate/default_config.yaml train_unconditional.py \
     --dataset_name="cifar10" \
     --dataloader_num_workers=8 \
     --model_config_name_or_path="config.json" \

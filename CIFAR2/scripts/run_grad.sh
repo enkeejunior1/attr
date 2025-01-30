@@ -1,3 +1,5 @@
+export TORCH_CUDA_ARCH_LIST="3.5;5.0+PTX;6.0;7.0;7.5;8.0;8.6"
+
 echo "gpu_ids: $1"
 echo "e_seed: $2"
 echo "setting: $3"
@@ -29,5 +31,6 @@ CUDA_VISIBLE_DEVICES=$1 python3 grad_unconditional.py \
     --t_strategy=$8 \
     --K=$9 \
     --Z=${10} \
-    --seed=42
+    --seed=42 \
+    --device="cuda:$1"
     

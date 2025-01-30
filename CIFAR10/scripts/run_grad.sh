@@ -14,7 +14,7 @@ echo "Z: ${10}"
 
 export HF_HOME="~/codes/.cache/huggingface"
 
-CUDA_VISIBLE_DEVICES=$1 python grad_unconditional.py \
+CUDA_VISIBLE_DEVICES=$1 python3 grad_unconditional.py \
     --dataset_name="cifar10" \
     --dataloader_num_workers=8 \
     --model_config_name_or_path="config.json" \
@@ -29,5 +29,6 @@ CUDA_VISIBLE_DEVICES=$1 python grad_unconditional.py \
     --t_strategy=$8 \
     --K=$9 \
     --Z=${10} \
-    --seed=42
+    --seed=42 \
+    --device="cuda:$1"
     

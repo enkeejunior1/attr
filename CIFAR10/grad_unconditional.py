@@ -343,6 +343,12 @@ def parse_args():
         default=None,
         help="TBD",
     )
+    parser.add_argument(
+        "--device",
+        type=str,
+        default=None,
+        help="TBD",
+    )
 
     parser.add_argument("--e_seed", type=int, default=0, help="A seed for reproducible training.")
 
@@ -467,7 +473,7 @@ def main():
     else:
         print(args.output_dir)
         model.load_state_dict(torch.load(model_path))
-    model.cuda()
+    model.to(args.device)
     model.eval()
 
     print(model.dtype)
@@ -481,7 +487,7 @@ def main():
                           seed=42, 
                           proj_type=ProjectionType.normal,
                           # proj_type=ProjectionType.rademacher,
-                          device='cuda:0')
+                          device=args.device)
     ####
     params = {k: v.detach() for k, v in model.named_parameters() if v.requires_grad==True}
     buffers = {k: v.detach() for k, v in model.named_buffers() if v.requires_grad==True}
@@ -657,7 +663,7 @@ def main():
     for step, batch in enumerate(train_dataloader):
         set_seeds(42)
         for key in batch.keys():
-            batch[key] = batch[key].cuda()
+            batch[key] = batch[key].to(args.device)
             
         # Skip steps until we reach the resumed step
         latents = batch["input"]         
@@ -673,7 +679,7 @@ def main():
             timesteps = torch.tensor([t]*bsz, device=latents.device)
             timesteps = timesteps.long()
             ####                    
-            set_seeds(args.e_seed*1000+t) # !!!!
+            set_seeds(args.e_seed*1000+t)
                     
             noise = torch.randn_like(latents)
             noisy_latents = noise_scheduler.add_noise(latents, noise, timesteps)
@@ -689,7 +695,7 @@ def main():
             ft_per_sample_grads = ft_compute_sample_grad(params, buffers, noisy_latents, timesteps, 
                                                                  target,
                                                                 )
-            ft_per_sample_grads = vectorize_and_ignore_buffers(list(ft_per_sample_grads.values())) #     
+            ft_per_sample_grads = vectorize_and_ignore_buffers(list(ft_per_sample_grads.values())) #     f
 
             # print(ft_per_sample_grads.size())
             # print(ft_per_sample_grads.dtype)

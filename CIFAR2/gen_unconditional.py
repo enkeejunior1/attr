@@ -306,6 +306,7 @@ def parse_args():
     )
 
     parser.add_argument("--gen_seed", type=int, default=0, help="A seed for reproducible training.")
+    parser.add_argument("--device", type=str, default="cuda:0", help="A seed for reproducible training.")
 
 
     args = parser.parse_args()
@@ -349,13 +350,13 @@ def main():
     model_path = '{}/unet/diffusion_pytorch_model.bin'.format(args.model_path)
     print(model_path)
     model.load_state_dict(torch.load(model_path))
-    model.cuda()
+    model.to(args.device)
     model.eval()
     ####
     pipeline = DDIMPipeline(
         unet=model,
         scheduler=noise_scheduler,
-    ).to('cuda')
+    ).to(args.device)
     print(pipeline.device)
     print('DDIM!')
     ####    

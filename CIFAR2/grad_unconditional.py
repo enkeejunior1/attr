@@ -330,6 +330,12 @@ def parse_args():
         default=None,
         help='TBD',
     )
+    parser.add_argument(
+        '--device',
+        type=str,
+        default="cuda:0",
+        help='TBD',
+    )
 
     parser.add_argument('--e_seed', type=int, default=0, help='A seed for reproducible training.')
 
@@ -368,7 +374,7 @@ def main():
     config = UNet2DModel.load_config(args.model_config_name_or_path)
     config['resnet_time_scale_shift'] = 'scale_shift'
         
-    model = UNet2DModel.from_config(config)
+    model = UNet2DModel.from_config(config).to(args.device)
     print(model.dtype)
     ####
     noise_scheduler = DDPMScheduler(num_train_timesteps=args.ddpm_num_steps, beta_schedule=args.ddpm_beta_schedule)
@@ -455,7 +461,7 @@ def main():
     else:
         print(args.output_dir)
         model.load_state_dict(torch.load(model_path))
-    model.cuda()
+    model.to(args.device)
     model.eval()
 
     print(model.dtype)
@@ -467,7 +473,7 @@ def main():
                           proj_dim=args.Z,
                           seed=42, 
                           proj_type=ProjectionType.normal,
-                          device='cuda:0',
+                          device=args.device,  
                           max_batch_size=1,
                           )
     ####
@@ -645,7 +651,7 @@ def main():
     for step, batch in enumerate(train_dataloader):
         set_seeds(42)
         for key in batch.keys():
-            batch[key] = batch[key].cuda()
+            batch[key] = batch[key].to(args.device)
             
         # Skip steps until we reach the resumed step
         latents = batch['input']         

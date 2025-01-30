@@ -12,7 +12,7 @@ export HF_HOME="~/codes/.cache/huggingface"
 for seed in `seq 1 1`
 do
 echo ${seed}
-CUDA_VISIBLE_DEVICES=$1 python eval_unconditional.py \
+CUDA_VISIBLE_DEVICES=$1 python3 eval_unconditional.py \
     --dataset_name="cifar10" \
     --dataloader_num_workers=8 \
     --model_config_name_or_path="config.json" \
@@ -22,6 +22,7 @@ CUDA_VISIBLE_DEVICES=$1 python eval_unconditional.py \
     --gen_path=./saved/$3/gen \
     --output_dir=./saved/$3/lds-val \
     --e_seed=$2 \
+    --device="cuda:$1" \
     --start $5 --end $6 \
     --seed=${seed}
 done

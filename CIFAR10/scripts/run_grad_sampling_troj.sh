@@ -14,7 +14,7 @@ echo "Z: ${10}"
 
 export HF_HOME="~/codes/.cache/huggingface"
 
-CUDA_VISIBLE_DEVICES=$1 python grad_sampling_troj_unconditional.py \
+CUDA_VISIBLE_DEVICES=$1 python3 grad_sampling_troj_unconditional.py \
     --dataset_name="cifar10" \
     --dataloader_num_workers=8 \
     --model_config_name_or_path="config.json" \

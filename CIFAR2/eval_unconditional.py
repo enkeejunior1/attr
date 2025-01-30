@@ -324,6 +324,12 @@ def parse_args():
         default=None,
         help="TBD",
     )
+    parser.add_argument(
+        "--device",
+        type=str,
+        default="cuda:0",
+        help="TBD",
+    )
 
     parser.add_argument("--e_seed", type=int, default=0, help="A seed for reproducible training.")
 
@@ -421,7 +427,7 @@ def main():
         model_path = '{}/ddpm-sub-{}-{}/unet/diffusion_pytorch_model.bin'.format(args.output_dir, index, args.seed)
         print(model_path)
         model.load_state_dict(torch.load(model_path))
-        model.cuda()
+        model.to(args.device)
         model.eval()
         
         batch_loss_list = []
@@ -430,7 +436,7 @@ def main():
             print(step)
             
             for key in batch.keys():
-                batch[key] = batch[key].cuda()
+                batch[key] = batch[key].to(args.device)
             
             # Skip steps until we reach the resumed step
             latents = batch["input"]    

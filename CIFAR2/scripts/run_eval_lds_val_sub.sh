@@ -23,7 +23,8 @@ CUDA_VISIBLE_DEVICES=$1 python3 eval_unconditional.py \
     --output_dir=./saved/$3/lds-val \
     --e_seed=$2 \
     --start $5 --end $6 \
-    --seed=${seed}
+    --seed=${seed} \
+    --device="cuda:$1"
 done
 
 
